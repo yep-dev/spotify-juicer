@@ -6,3 +6,6 @@ services:
     volumes:
       - .:/app
     env_file: .env
+    
+  redis:
+    image: redis:6
