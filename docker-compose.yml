@@ -6,6 +6,10 @@ services:
     volumes:
       - .:/app
     env_file: .env
-    
+    depends_on:
+      - redis
+  
   redis:
-    image: redis:6
+    image: redis/redis-stack-server
+    ports:
+      - "6379:6379"
