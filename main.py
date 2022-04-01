@@ -35,6 +35,7 @@ class Ticker:
 
         self.last = self.song
         self.last_left = None
+        self.last_is_playing = False
         self.ticker = 0
 
     def poll(self):
@@ -43,7 +44,7 @@ class Ticker:
 
     def tick(self):
         self.poll()
-        if self.song and self.song["id"] != self.last["id"]:
+        if self.song and (self.song["id"] != self.last["id"] or self.ticker == 0):
             if song_data := r.hgetall(SONG + self.song["id"]):
                 skipped = int(song_data["skipped"])
                 listened = int(song_data["listened"])
@@ -57,7 +58,7 @@ class Ticker:
                 r.json().set(LOG + self.song["id"], ".", {LISTENED: [], SKIPPED: []})
 
             if self.last_left is not None:
-                if self.last_left > 3000:
+                if self.last_left > 3000 and self.last_is_playing:
                     self.log_skipped()
                 elif self.last_left < 1000:
                     self.log_listened()
@@ -68,6 +69,7 @@ class Ticker:
         self.last_left = (
             self.song and self.song["duration_ms"] - self.current["progress_ms"]
         )
+        self.last_is_playing = self.current['is_playing']
         self.ticker += 1
 
     def skip(self):
