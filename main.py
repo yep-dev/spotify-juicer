@@ -67,7 +67,7 @@ class Ticker:
         self.last_left = (
             self.song and self.song["duration_ms"] - self.current["progress_ms"]
         )
-        self.last_is_playing = self.current['is_playing']
+        self.last_is_playing = self.current and self.current['is_playing']
         self.ticker += 1
 
     def skip(self):
