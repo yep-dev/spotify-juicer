@@ -14,9 +14,7 @@ auth = SpotifyOAuth(
     redirect_uri="http://localhost/",
     scope="user-read-playback-state,user-modify-playback-state",
 )
-token = auth.get_access_token()
-
-s = spotipy.Spotify(auth=token["access_token"])
+s = spotipy.Spotify(auth_manager=auth)
 
 r = redis.Redis(host="redis", port=6379, decode_responses=True)
 
